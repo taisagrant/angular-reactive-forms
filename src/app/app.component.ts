@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-root',
@@ -9,18 +10,73 @@ import { FormGroup, FormControl } from '@angular/forms';
 export class AppComponent implements OnInit {
   genders = ['male','female'];
   signupForm: FormGroup;
+  forbiddenUserNames = ['Alex', 'Tania']
 
   ngOnInit() {
     
     this.signupForm = new FormGroup({
-      'username': new FormControl(null),
-      'email': new FormControl(null),
-      'gender': new FormControl('female')
+      'username': new FormControl(null, [Validators.required, this.forbiddenNames.bind(this)]),
+      'email': new FormControl(null, [Validators.required, Validators.email], this.forbiddenEmail),
+      'gender': new FormControl('female'),
+      'hobbies': new FormArray([])
     });
-    // console.log(this.signupForm);
+
+    // checking for valuechanges,statusChanges
+
+    // this.signupForm.valueChanges.subscribe(
+    //   (value) => console.log(value)
+    // );
+
+    // this.signupForm.statusChanges.subscribe(
+    //   (status) => console.log(status)
+    // );
+
+    // set, patch value
+
+    this.signupForm.setValue({
+      'username': 'Thomas',
+      'email': 'thomas@thomas.com',
+      'gender': 'male',
+      'hobbies': []
+    });
+
+    // this.signupForm.patchValue({
+    //   'username': 'Vidas'
+    // });
+
   }
 
   onSubmit(){
     console.log(this.signupForm);
+    this.signupForm.reset();
+  }
+
+  onAddHobby() {
+    const control = new FormControl(null, Validators.required);
+    (<FormArray>this.signupForm.get('hobbies')).push(control);
+  }
+
+  // our own validator
+
+  forbiddenNames(control: FormControl):{[s:string]: boolean} {
+    if(this.forbiddenUserNames.indexOf(control.value) !== -1) {
+      return {'nameIsForbidden': true}
+    }
+    return null; // - is important:this is how you tell Angular your form is a valid
+  }
+
+  // validator for asinc validation
+
+  forbiddenEmail(control: FormControl): Promise<any> | Observable<any> {
+    const promise = new Promise<any>((resolve, reject) => {
+      setTimeout(() => {
+        if(control.value === 'tess@tess.co') {
+          resolve({'emailIsForbidden': true})
+        } else {
+          resolve(null);
+        }
+      }, 1500);
+    });
+    return promise;
   }
 }
