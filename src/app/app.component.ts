@@ -33,12 +33,12 @@ export class AppComponent implements OnInit {
 
     // set, patch value
 
-    this.signupForm.setValue({
-      'username': 'Thomas',
-      'email': 'thomas@thomas.com',
-      'gender': 'male',
-      'hobbies': []
-    });
+    // this.signupForm.setValue({
+    //   'username': 'Thomas',
+    //   'email': 'thomas@thomas.com',
+    //   'gender': 'male',
+    //   'hobbies': []
+    // });
 
     // this.signupForm.patchValue({
     //   'username': 'Vidas'
