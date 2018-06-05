@@ -1,5 +1,11 @@
+@import "assets/variables";
+@import '../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap';
+
 /* You can add global styles to this file, and also import other style files */
-$color-h1:blue;
-h1{
-    color: $color-h1;
+.main{
+    width: 80%;
+    margin: 30px auto;
+    .custom-row{
+        width: 80%;
+    }
 }
